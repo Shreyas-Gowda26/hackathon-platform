@@ -1,0 +1,13 @@
+# Virtual environment
+venv/
+
+# Environment variables (NEVER push this!)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Mac system files
+.DS_Store
