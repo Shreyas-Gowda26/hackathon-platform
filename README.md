@@ -394,4 +394,4 @@ hackathon-platform/
 
 ## Status
 
-🚧 Work in progress — mentor assignments endpoint coming soon.
+🚧 Work in progress — mentor assignments endpoint coming soon.I'll add that by tomorrow!
