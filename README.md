@@ -38,9 +38,9 @@ Authorization: Bearer <your_token>
 | Role | Access |
 |---|---|
 | `participant` | Register for events, create teams, submit projects |
-| `mentor` | Assigned to teams |
+| `mentor` | View assigned teams |
 | `judge` | Evaluate projects |
-| `admin` | Full access — create/delete events, manage registrations |
+| `admin` | Full access — create/delete events, assign mentors, manage registrations |
 
 ---
 
@@ -253,7 +253,7 @@ POST /projects/
 }
 ```
 
-#### Submit Project (change status to submitted)
+#### Submit Project
 ```
 PUT /projects/{project_id}
 ```
@@ -265,6 +265,90 @@ PUT /projects/{project_id}
 ```
 > `status` can be: `draft` | `submitted`
 > Setting `submitted` automatically records the `submission_time`.
+
+---
+
+### 🧑‍🏫 Mentors
+
+| Method | Endpoint | Auth | Role |
+|---|---|---|---|
+| `POST` | `/mentors/assign` | ✅ | admin |
+| `DELETE` | `/mentors/remove` | ✅ | admin |
+| `GET` | `/mentors/team/{team_id}` | ❌ | public |
+| `GET` | `/mentors/my-teams` | ✅ | mentor |
+| `GET` | `/mentors/mentor/{mentor_id}` | ✅ | admin |
+
+#### Assign Mentor to Team
+```
+POST /mentors/assign
+```
+> User must have role `mentor` to be assigned. Admin only.
+
+**Body:**
+```json
+{
+  "mentor_id": 2,
+  "team_id": 1
+}
+```
+**Response:**
+```json
+{
+  "message": "Mentor assigned successfully",
+  "id": 1
+}
+```
+
+#### Remove Mentor from Team
+```
+DELETE /mentors/remove
+```
+**Body:**
+```json
+{
+  "mentor_id": 2,
+  "team_id": 1
+}
+```
+
+#### Get All Mentors for a Team
+```
+GET /mentors/team/{team_id}
+```
+**Response:**
+```json
+[
+  {
+    "user_id": 2,
+    "name": "John",
+    "email": "john@gmail.com",
+    "phone": "9999999999"
+  }
+]
+```
+
+#### Get My Assigned Teams (Mentor)
+```
+GET /mentors/my-teams
+```
+**Response:**
+```json
+[
+  {
+    "team_id": 1,
+    "team_name": "Team Alpha",
+    "event_name": "HackFest 2026",
+    "start_date": "2026-06-01",
+    "end_date": "2026-06-03",
+    "leader_name": "Shreyas"
+  }
+]
+```
+
+#### Get All Teams of a Mentor (Admin)
+```
+GET /mentors/mentor/{mentor_id}
+```
 
 ---
 
@@ -339,7 +423,7 @@ All errors follow this format:
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/hackathon-platform.git
+git clone https://github.com/Shreyas-Gowda26/hackathon-platform.git
 cd hackathon-platform
 
 # 2. Create and activate virtual environment
@@ -376,6 +460,7 @@ hackathon-platform/
 │   │   ├── teams.py         # Teams & members
 │   │   ├── projects.py      # Project submissions
 │   │   ├── evaluations.py   # Judging & leaderboard
+│   │   ├── mentors.py       # Mentor assignments
 │   │   └── dependencies.py  # JWT auth middleware
 │   └── schemas/
 │       ├── user.py
@@ -383,7 +468,8 @@ hackathon-platform/
 │       ├── registration.py
 │       ├── team.py
 │       ├── project.py
-│       └── evaluation.py
+│       ├── evaluation.py
+│       └── mentor.py
 ├── schema.sql               # Database schema
 ├── requirements.txt
 ├── .env.example
@@ -394,4 +480,4 @@ hackathon-platform/
 
 ## Status
 
-🚧 Work in progress — mentor assignments endpoint coming soon.I'll add that by tomorrow!
+✅ Backend complete — all core APIs implemented.
