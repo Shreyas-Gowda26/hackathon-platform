@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Hackathon Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-glow: rgba(99,102,241,0.18);
+      --accent-soft: rgba(99,102,241,0.08);
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: rgba(15,23,42,0.1);
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+      --shadow-md: 0 4px 16px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.05);
+      --shadow-lg: 0 20px 60px rgba(15,23,42,0.1), 0 8px 24px rgba(15,23,42,0.07);
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f0f2f7;
+      min-height: 100vh;
+      color: var(--text-primary);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 10% -5%, rgba(99,102,241,0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 90% 105%, rgba(139,92,246,0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 60px;
+    }
+
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    header h1::before {
+      content: '';
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 7px;
+      flex-shrink: 0;
+    }
+
+    header nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    header nav a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.38rem 0.75rem;
+      border-radius: 6px;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    header nav a:hover {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    header nav a#logout {
+      margin-left: auto;
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    header nav a#logout:hover {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    /* ── Page wrapper ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 3rem auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* ── Hero greeting ── */
+    .dashboard-hero {
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .dashboard-hero h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-hero h2 .wave {
+      display: inline-block;
+      animation: wave 2.4s ease-in-out infinite;
+      transform-origin: 70% 80%;
+    }
+
+    @keyframes wave {
+      0%, 60%, 100% { transform: rotate(0deg); }
+      10%  { transform: rotate(18deg); }
+      20%  { transform: rotate(-8deg); }
+      30%  { transform: rotate(14deg); }
+      40%  { transform: rotate(-4deg); }
+    }
+
+    /* ── Role info ── */
+    #role-info {
+      animation: fadeUp 0.5s 0.08s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* ── Quick links ── */
+    #quick-links {
+      animation: fadeUp 0.5s 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    /* ── Shared card base (for JS-injected content) ── */
+    .dash-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow-md);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .dash-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.6rem;
+    }
+
+    .dash-card p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Role badge */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.3rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(99,102,241,0.2);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Quick link grid */
+    .quick-link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.85rem;
+      margin-top: 1.25rem;
+    }
+
+    .quick-link-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 1.1rem 1.1rem 1rem;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: var(--shadow-sm);
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all var(--transition);
+    }
+
+    .quick-link-item:hover {
+      border-color: #c7d2fe;
+      background: var(--surface);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .quick-link-item .ql-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      background: var(--accent-soft);
+    }
+
+    .quick-link-item .ql-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .quick-link-item .ql-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      line-height: 1.4;
+    }
+
+    /* Section label */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 0 1rem; height: auto; flex-wrap: wrap; padding: 0.75rem 1rem; gap: 0.75rem; }
+      .container { margin: 1.5rem auto; }
+      .dashboard-hero h2 { font-size: 1.7rem; }
+      .quick-link-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hackathon Platform</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="events.html" id="nav-events">Events</a>
+      <a href="teams.html" id="nav-teams">Teams</a>
+      <a href="projects.html" id="nav-projects">Projects</a>
+      <a href="mentors.html" id="nav-mentors">Mentors</a>
+      <a href="evaluations.html" id="nav-evaluations">Evaluations</a>
+      <a href="admin.html" id="nav-admin">Admin</a>
+      <a href="leaderboard.html" id="nav-leaderboard">Leaderboard</a>
+      <a href="#" id="logout">Logout</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="dashboard-hero">
+      <h2>Welcome <span class="wave">👋</span></h2>
+    </div>
+    <div id="role-info"></div>
+    <div id="quick-links"></div>
+  </div>
+
+  <script src="assets/common.js"></script>
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>

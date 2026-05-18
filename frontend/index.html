@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hackathon Platform - Login/Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand: #0f172a;
+      --brand-mid: #1e293b;
+      --accent: #6366f1;
+      --accent-light: #818cf8;
+      --accent-glow: rgba(99,102,241,0.18);
+      --accent-soft: rgba(99,102,241,0.08);
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: rgba(15,23,42,0.1);
+      --border-focus: #6366f1;
+      --text-primary: #0f172a;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --success-bg: #f0fdf4;
+      --success-text: #166534;
+      --success-border: #bbf7d0;
+      --error-bg: #fef2f2;
+      --error-text: #991b1b;
+      --error-border: #fecaca;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+      --shadow-md: 0 4px 16px rgba(15,23,42,0.08), 0 2px 6px rgba(15,23,42,0.05);
+      --shadow-lg: 0 20px 60px rgba(15,23,42,0.12), 0 8px 24px rgba(15,23,42,0.08);
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f0f2f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(99,102,241,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 110%, rgba(139,92,246,0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(99,102,241,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header h1::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    header nav a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: all var(--transition);
+    }
+
+    header nav a:hover {
+      color: var(--accent);
+      border-color: var(--accent-light);
+      background: var(--accent-soft);
+    }
+
+    /* ── Main Container ── */
+    #auth-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      margin: 3rem auto;
+      padding: 0 1rem 3rem;
+    }
+
+    /* ── Tab Switcher ── */
+    .tab-switcher {
+      display: flex;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 4px);
+      padding: 5px;
+      margin-bottom: 1.5rem;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.65rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ── Card ── */
+    .auth-card {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: calc(var(--radius) + 4px);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      padding: 2.25rem 2rem;
+      animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── Card Header ── */
+    .card-header {
+      margin-bottom: 1.75rem;
+    }
+
+    .card-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* ── Form Panel Visibility ── */
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    /* ── Form Layout ── */
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.01em;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.4;
+      transition: opacity var(--transition);
+    }
+
+    .form-group:focus-within .input-icon {
+      opacity: 0.7;
+      color: var(--accent);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 0.7rem 0.9rem 0.7rem 2.5rem;
+      background: var(--surface-2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      transition: all var(--transition);
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    input:hover, select:hover {
+      border-color: #c7d2fe;
+      background: var(--surface);
+    }
+
+    input:focus, select:focus {
+      border-color: var(--border-focus);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    /* Select arrow */
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4.5px solid transparent;
+      border-right: 4.5px solid transparent;
+      border-top: 5px solid var(--text-muted);
+      pointer-events: none;
+    }
+
+    select { padding-right: 2.5rem; cursor: pointer; }
+
+    /* Row */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    /* ── Submit Button ── */
+    .btn-primary {
+      width: 100%;
+      padding: 0.8rem 1.5rem;
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition);
+      box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(99,102,241,0.45);
+    }
+
+    .btn-primary:hover::before { opacity: 1; }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+    }
+
+    /* ── Messages ── */
+    .error, .success {
+      font-size: 0.83rem;
+      font-weight: 400;
+      padding: 0.6rem 0.9rem;
+      border-radius: var(--radius-sm);
+      margin-top: 0.85rem;
+      display: none;
+    }
+
+    .error:not(:empty) {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid var(--error-border);
+    }
+
+    .success:not(:empty) {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Pill badges for role ── */
+    .role-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .role-pill {
+      flex: 1;
+      min-width: 80px;
+      padding: 0.5rem 0.4rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition);
+    }
+
+    .role-pill:hover {
+      border-color: #c7d2fe;
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .role-pill.selected {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+
+    /* ── Role icons ── */
+    .role-pill span { display: block; font-size: 1.1rem; margin-bottom: 2px; }
+
+    /* ── Footer note ── */
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .auth-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .auth-footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 540px) {
+      header { padding: 1rem 1.25rem; }
+      .auth-card { padding: 1.75rem 1.25rem; }
+      .form-row { grid-template-columns: 1fr; }
+      #auth-container { margin: 1.5rem auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hackathon Platform</h1>
+    <nav>
+      <a href="index.html">← Home</a>
+    </nav>
+  </header>
+
+  <div class="container" id="auth-container">
+
+    <div class="tab-switcher">
+      <button class="tab-btn active" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <div class="auth-card">
+
+      <!-- LOGIN PANEL -->
+      <div class="form-panel active" id="panel-login">
+        <div class="card-header">
+          <h2>Welcome back</h2>
+          <p>Sign in to your Hackathon Platform account</p>
+        </div>
+
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email address</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="login-email" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="login-password" placeholder="Your password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Sign In →</button>
+          <div class="error" id="login-error"></div>
+        </form>
+
+        <p class="auth-footer">No account? <a onclick="switchTab('register')">Create one for free</a></p>
+      </div>
+
+      <!-- REGISTER PANEL -->
+      <div class="form-panel" id="panel-register">
+        <div class="card-header">
+          <h2>Join the platform</h2>
+          <p>Create your account and start building</p>
+        </div>
+
+        <form id="register-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="register-name">Full name</label>
+              <div class="input-wrap">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                <input type="text" id="register-name" placeholder="Jane Smith" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="register-phone">Phone <span style="color:var(--text-muted);font-weight:300">(optional)</span></label>
+              <div class="input-wrap">
+                <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8 8l1.27.75A16 16 0 0 0 15.31 15l.75 1.27-.3.25a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <input type="text" id="register-phone" placeholder="+91 98765 43210">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="register-email">Email address</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="register-email" placeholder="you@example.com" required>
+            </div>
+          </div>
+
+          <!-- Role as visual pills driving the hidden select -->
+          <div class="form-group">
+            <label>Your role</label>
+            <div class="role-pills">
+              <button type="button" class="role-pill" data-value="participant" onclick="selectRole(this)">
+                <span>🚀</span>Participant
+              </button>
+              <button type="button" class="role-pill" data-value="mentor" onclick="selectRole(this)">
+                <span>🧭</span>Mentor
+              </button>
+              <button type="button" class="role-pill" data-value="judge" onclick="selectRole(this)">
+                <span>⚖️</span>Judge
+              </button>
+            </div>
+            <!-- Hidden select preserves original logic -->
+            <select id="register-role" required style="display:none;" aria-hidden="true">
+              <option value="">Select Role</option>
+              <option value="participant">Participant</option>
+              <option value="mentor">Mentor</option>
+              <option value="judge">Judge</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="register-password" placeholder="Create a strong password" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Create Account →</button>
+          <div class="error" id="register-error"></div>
+          <div class="success" id="register-success"></div>
+        </form>
+
+        <p class="auth-footer">Already have an account? <a onclick="switchTab('login')">Sign in</a></p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    /* ── Tab switching ── */
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', (tab === 'login' ? i === 0 : i === 1));
+      });
+      document.getElementById('panel-login').classList.toggle('active', tab === 'login');
+      document.getElementById('panel-register').classList.toggle('active', tab === 'register');
+    }
+
+    /* ── Role pill selection ── */
+    function selectRole(pill) {
+      document.querySelectorAll('.role-pill').forEach(p => p.classList.remove('selected'));
+      pill.classList.add('selected');
+      document.getElementById('register-role').value = pill.dataset.value;
+    }
+  </script>
+  <script src="assets/index.js"></script>
+</body>
+</html>

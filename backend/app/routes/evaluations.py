@@ -15,10 +15,25 @@ def evaluate_project(
 ):
     cursor = db.cursor(dictionary=True)
 
-    # Check project exists
-    cursor.execute("SELECT * FROM Projects WHERE project_id = %s", (data.project_id,))
-    if not cursor.fetchone():
+    cursor.execute(
+        """SELECT p.*, t.team_id FROM Projects p
+        JOIN Teams t ON p.team_id = t.team_id
+        WHERE p.project_id = %s""",
+        (data.project_id,),
+    )
+    project = cursor.fetchone()
+    if not project:
         raise HTTPException(status_code=404, detail="Project not found")
+
+    if project["status"] != "submitted":
+        raise HTTPException(status_code=400, detail="Project must be submitted before evaluation")
+
+    cursor.execute(
+        "SELECT * FROM JudgeAssignments WHERE judge_id = %s AND team_id = %s",
+        (current_user["user_id"], project["team_id"]),
+    )
+    if not cursor.fetchone():
+        raise HTTPException(status_code=403, detail="You are not assigned to evaluate this team")
 
     # Validate score range
     if not 0 <= data.score <= 100:

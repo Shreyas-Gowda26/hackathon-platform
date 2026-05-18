@@ -7,6 +7,24 @@ from app.routes.dependencies import get_current_user, require_role
 router = APIRouter(prefix="/mentors", tags=["Mentors"])
 
 
+@router.get("/assignments")
+def list_all_assignments(
+    db: MySQLConnection = Depends(get_db),
+    current_user: dict = Depends(require_role("admin")),
+):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(
+        """SELECT ma.id, ma.mentor_id, ma.team_id,
+        u.name AS mentor_name, t.team_name, e.event_name
+        FROM MentorAssignments ma
+        JOIN Users u ON ma.mentor_id = u.user_id
+        JOIN Teams t ON ma.team_id = t.team_id
+        JOIN Events e ON t.event_id = e.event_id
+        ORDER BY ma.id DESC"""
+    )
+    return cursor.fetchall()
+
+
 @router.post("/assign", status_code=201)
 def assign_mentor(
     data: MentorAssign,

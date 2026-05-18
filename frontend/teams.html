@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teams - Hackathon Platform</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header>
+    <h1>Teams</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="events.html" id="nav-events">Events</a>
+      <a href="teams.html" id="nav-teams">Teams</a>
+      <a href="projects.html" id="nav-projects">Projects</a>
+      <a href="mentors.html" id="nav-mentors">Mentors</a>
+      <a href="evaluations.html" id="nav-evaluations">Evaluations</a>
+      <a href="admin.html" id="nav-admin">Admin</a>
+      <a href="leaderboard.html" id="nav-leaderboard">Leaderboard</a>
+      <a href="#" id="logout">Logout</a>
+    </nav>
+  </header>
+  <div class="container container-wide">
+    <h2>Pending invites</h2>
+    <div id="invites-list"></div>
+
+    <h2>Your teams</h2>
+    <div id="teams-list"></div>
+
+    <h3>Create new team</h3>
+    <p class="hint">You must register for an event before creating a team.</p>
+    <form id="create-team-form">
+      <input type="text" id="team-name" placeholder="Team name" required>
+      <select id="event-id" required>
+        <option value="">Loading your events…</option>
+      </select>
+      <button type="submit">Create team</button>
+      <div class="error" id="team-error"></div>
+    </form>
+  </div>
+  <script src="assets/common.js"></script>
+  <script src="assets/teams.js"></script>
+</body>
+</html>

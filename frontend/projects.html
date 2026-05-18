@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - Hackathon Platform</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header>
+    <h1>Projects</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="events.html" id="nav-events">Events</a>
+      <a href="teams.html" id="nav-teams">Teams</a>
+      <a href="projects.html" id="nav-projects">Projects</a>
+      <a href="mentors.html" id="nav-mentors">Mentors</a>
+      <a href="evaluations.html" id="nav-evaluations">Evaluations</a>
+      <a href="admin.html" id="nav-admin">Admin</a>
+      <a href="leaderboard.html" id="nav-leaderboard">Leaderboard</a>
+      <a href="#" id="logout">Logout</a>
+    </nav>
+  </header>
+  <div class="container container-wide">
+    <h2>Projects</h2>
+    <p class="hint">Participants see only their team’s work. Mentors see assigned teams.</p>
+    <div id="projects-list"></div>
+    <section id="project-form-section">
+      <h3>Create project (team leaders)</h3>
+      <form id="submit-project-form">
+        <select id="team-id" required></select>
+        <input type="text" id="project-title" placeholder="Project title" required>
+        <textarea id="project-description" placeholder="Description" required></textarea>
+        <input type="url" id="repo-link" placeholder="Repository link">
+        <input type="url" id="demo-link" placeholder="Demo link">
+        <button type="submit">Save as draft</button>
+        <div class="error" id="project-error"></div>
+      </form>
+    </section>
+  </div>
+  <script src="assets/common.js"></script>
+  <script src="assets/projects.js"></script>
+</body>
+</html>
