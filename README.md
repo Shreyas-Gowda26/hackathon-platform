@@ -480,4 +480,4 @@ hackathon-platform/
 
 ## Status
 
-✅ Backend complete — all core APIs implemented.
+✅ Backend complete — all core APIs implemented.Need to add content into readme
