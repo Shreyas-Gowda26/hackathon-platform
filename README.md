@@ -480,4 +480,4 @@ hackathon-platform/
 
 ## Status
 
-✅ Backend complete — all core APIs implemented.Need to add content into readme
+✅ Backend complete — all core APIs implemented.Need to add judge table addition content into readme
