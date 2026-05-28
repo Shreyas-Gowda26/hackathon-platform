@@ -1,6 +1,6 @@
 # Hackathon Platform API
 
-A backend REST API for managing hackathons — built with FastAPI and MySQL.And frontend built with html,css and js
+A backend REST API for managing hackathons — built with FastAPI and MySQL.And frontend built with html,css and js as of now but need to change so for the ones who's interested can do this!
 
 ---
 
